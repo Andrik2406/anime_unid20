@@ -1,15 +1,19 @@
 <?php
-class modules extends mysqli{
-    public function __construct($host, $usuario, $pass, $bd){
+class modules extends mysqli
+{
+    public function __construct($host, $usuario, $pass, $bd)
+    {
         parent::__construct($host, $usuario, $pass, $bd);
     }
 
-    public function get_data(){
-        $consulta = "SELECT u.nombre, u.correo, u.passwords, ur.rol, rsc.status FROM usuarios u LEFT JOIN rel_rol ur ON u.rol = ur.id LEFT JOIN rel_status rsc ON u.status = rsc.id";
+    public function get_data()
+    {
+        $consulta = "SELECT u.id, u.nombre, u.correo, u.passwords, ur.rol, rsc.status FROM usuarios u LEFT JOIN rel_rol ur ON u.rol = ur.id LEFT JOIN rel_status rsc ON u.status = rsc.id";
         $result = mysqli::query($consulta);
         $array = [];
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-            $array[]=[ 
+            $array[] = [
+                "id" => $row["id"],
                 "nombre" => $row["nombre"],
                 "rol" => $row["rol"],
                 "status" => $row["status"],
@@ -19,15 +23,16 @@ class modules extends mysqli{
         }
         echo json_encode($array);
     }
-    
-    public function insert_data(){
+
+    public function insert_data()
+    {
         mysqli_report(MYSQLI_REPORT_OFF);
         $nombre = $_POST['nombre'];
         $correo = $_POST['correo'];
         $passwords = $_POST['passwords'];
         $rol = $_POST['rol'];
         $status = $_POST['status'];
-        
+
 
         $consulta_existencia = "SELECT correo FROM usuarios WHERE correo = '$correo'";
         $resultado_existencia = mysqli::query($consulta_existencia);
@@ -39,19 +44,30 @@ class modules extends mysqli{
             echo json_encode($array);
             return;
         }
-         
+
         $consulta = "INSERT INTO usuarios (correo, passwords, rol, status, nombre) VALUES ('$correo', '$passwords', '$rol', '$status', '$nombre')";
         $array = [
             "status" => "success",
             "text" => "Se insertó correctamente"
         ];
-        
+
         if (!mysqli::query($consulta)) {
             $array = [
                 "status" => "error",
                 "text" => "No se pudo insertar el registro"
             ];
         }
+        echo json_encode($array);
+    }
+    public function delete_data()
+    {
+        $datos = $_POST["data"];
+        $consulta = "DELETE FROM usuarios WHERE id IN ($datos)";
+        mysqli::query($consulta);
+        $array = [
+            "text" => "Se eliminó correctamente",
+            "status" => "success",
+        ];
         echo json_encode($array);
     }
 }
@@ -66,15 +82,11 @@ if (isset($_POST)) {
         case 'insert_data':
             $modules->insert_data();
             break;
+        case 'delete_data':
+            $modules->delete_data();
+            break;
         default:
             echo "Función incompleta";
             break;
     }
 }
-?>
-
-    
-        
-        
-        
-        
