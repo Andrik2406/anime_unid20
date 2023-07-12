@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <title>Document</title>
 </head>
+
 <body>
     <aside>
         <div class="logo">
@@ -30,9 +32,9 @@
         <i class="fa-sharp fa-solid fa-chevron-left"></i>
         <div class="header">
             <h2>usuarios</h2>
-            <div class=actions> 
-                <a href="#" class="btnaction"id="btnNew"><i class="fa-solid fa-plus"></i> nuevo</a>
-                <a href="#" class="btnaction"><i class="fa-solid fa-plus"></i> borrar</a>
+            <div class=actions>
+                <a href="#" class="btnaction" id="btnNew"><i class="fa-solid fa-plus"></i> nuevo</a>
+                <a href="#" class="btnaction" id="btnBorrar"><i class="fa-solid fa-plus"></i> borrar</a>
             </div>
         </div>
         <section id="data">
@@ -47,13 +49,12 @@
                         <th> nombre</th>
                         <th> rol</th>
                         <th> status</th>
+                        <th> Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="cuerpo">
-                    
-                    </tbody>
-                </table>
-            </section>
+                <tbody id="cuerpo"></tbody>
+            </table>
+        </section>
         <section id="insert_data">
             <div class="container">
                 <form action="consulta.php" method="POST" id="form">
@@ -85,7 +86,8 @@
                 </form>
             </div>
         </section>
-        </main>
+    </main>
     <script src="tabla.js"></script>
 </body>
+
 </html>
