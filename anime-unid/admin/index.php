@@ -73,7 +73,7 @@
                         </div>
                         <div class="col-6">
                             <label for="status" class="form-label">Status</label>
-                            <input type="text" class="form-control" name="status" id="status">
+                            <input type="text" class="form-control" name="status" id="statuses">
                         </div>
                         <div class="col-12 mb-3">
                             <label for="nombre" class="form-label">usuario</label>

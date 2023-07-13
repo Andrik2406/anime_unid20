@@ -23,6 +23,21 @@ class modules extends mysqli
         }
         echo json_encode($array);
     }
+    public function get_one($id)
+    {
+        $consulta = "SELECT * FROM usuarios  WHERE id = $id";
+        $result = mysqli::query($consulta);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $array = [
+            "id" => $row["id"],
+            "nombre" => $row["nombre"],
+            "rol" => $row["rol"],
+            "status" => $row["status"],
+            "correo" => $row["correo"],
+            "passwords" => $row["passwords"],
+        ];
+        echo json_encode($array);
+    }
 
     public function insert_data()
     {
@@ -59,6 +74,30 @@ class modules extends mysqli
         }
         echo json_encode($array);
     }
+    public function update_data()
+    {
+        mysqli_report(MYSQLI_REPORT_OFF);
+        $nombre = $_POST['nombre'];
+        $correo = $_POST['correo'];
+        $passwords = $_POST['passwords'];
+        $rol = $_POST['rol'];
+        $status = $_POST['status'];
+        $id = $_POST['id'];
+
+        $consulta = "UPDATE usuarios set correo = '$correo', passwords = '$passwords', rol = $rol, status = $status, nombre = '$nombre' WHERE id =  $id";
+        $array = [
+            "status" => "success",
+            "text" => "Se editó correctamente"
+        ];
+
+        if (!mysqli::query($consulta)) {
+            $array = [
+                "status" => "error",
+                "text" => "No se pudo insertar el registro"
+            ];
+        }
+        echo json_encode($array);
+    }
     public function delete_data()
     {
         $datos = $_POST["data"];
@@ -79,8 +118,14 @@ if (isset($_POST)) {
         case 'get_data':
             $modules->get_data();
             break;
+        case 'get_one':
+            $modules->get_one($_POST['id']);
+            break;
         case 'insert_data':
             $modules->insert_data();
+            break;
+        case 'update_data':
+            $modules->update_data();
             break;
         case 'delete_data':
             $modules->delete_data();
