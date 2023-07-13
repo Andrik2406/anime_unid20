@@ -25,7 +25,7 @@ function get_data () {
                                 <td>${elemento.rol}</td>
                                 <td>${elemento.status}</td>
                                 <td>
-                                <a href="#" class="btn_editar">Editar</a>
+                                <a href="#" class="btn_editar" data-id="${elemento.id}">Editar</a>
                                 </td>
                                 
                             </tr>
@@ -35,20 +35,26 @@ function get_data () {
             tabla.innerHTML = template
         });
 }
-get_data()
-btnNew.addEventListener("click", (event) => {
-    event.preventDefault()
+const showForm = () => {
     if (data.style.display != "none") {
         data.style.display = "none"
         insert_data.style.display = "block"
     }
-
+}
+get_data()
+btnNew.addEventListener("click", (event) => {
+    event.preventDefault()
+    showForm()
 })
 btnSave.addEventListener("click", (event) => {
     event.preventDefault()
-    if (nombre.value != "" && passwords.value != "" && rol.value != "" && status.value != "" && correo.value != "") {
+    if (nombre.value != "" && passwords.value != "" && rol.value != "" && statuses.value != "" && correo.value != "") {
         let formdata = new FormData(form)
         formdata.append("funcion", "insert_data")
+        if (btnSave.hasAttribute("data-id")) {
+            formdata.set("funcion", "update_data")
+            formdata.append("id", btnSave.getAttribute("data-id"))
+        }
         opciones.body = formdata
         fetch('consulta.php', opciones)
             .then(respuesta => respuesta.json())
@@ -59,6 +65,8 @@ btnSave.addEventListener("click", (event) => {
                     form.reset()
                     insert_data.style.display = "none"
                     get_data()
+                    btnSave.innerText = "Guardar"
+                    btnSave.removeAttribute("data-id")
                 }
             })
     }
@@ -87,7 +95,26 @@ const showDeleteIcon = () => {
 }
 tabla.addEventListener("click", event => {
     if (event.target.classList.contains('btn_editar')) {
-
+        event.preventDefault()
+        showForm()
+        const formData = new FormData()
+        const id = event.target.getAttribute('data-id')
+        formData.append("funcion", "get_one")
+        formData.append("id", id)
+        fetch("consulta.php", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(row => {
+                nombre.value = row.nombre
+                passwords.value = row.passwords
+                rol.value = row.rol
+                statuses.value = row.status
+                correo.value = row.correo
+                btnSave.setAttribute("data-id", row.id)
+                btnSave.innerText = "Editar"
+            })
     }
     if (event.target.classList.contains('checkboxes')) {
         showDeleteIcon()
